@@ -1,0 +1,6 @@
+/* The signed-in trainer sees the coach workspace; a player sees only own progress. */
+.role-coach .coach-view { display: block; }
+.role-coach .player-view { display: none; }
+.role-player .coach-view { display: none; }
+
+.local-status.is-error { color: #b33a32; }

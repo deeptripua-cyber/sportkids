@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#071d19" />
+    <title>SportKids — розвиток гравця</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="roles.css" />
+    <link rel="stylesheet" href="details.css" />
+    <link rel="stylesheet" href="tests.css" />
+    <link rel="stylesheet" href="smart.css" />
+    <link rel="stylesheet" href="challenges.css" />
+    <link rel="stylesheet" href="photo.css" />
+    <link rel="stylesheet" href="simple.css" />
+    <link rel="stylesheet" href="secure.css" />
+    <link rel="stylesheet" href="password.css" />
+    <link rel="stylesheet" href="auth-stability.css" />
+    <link rel="stylesheet" href="ui-refinements.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#dashboard" aria-label="SportKids на головну"><span class="brand-mark">S</span>SportKids</a>
+      <nav class="role-nav" aria-label="Кабінети">
+        <button type="button" class="active" data-role="player">Кабінет гравця</button>
+        <button type="button" data-role="coach">Кабінет тренера</button>
+      </nav>
+      <span class="local-status" id="sessionStatus">Локальний режим</span>
+      <button class="ghost-button" id="loginButton" type="button">Увійти</button>
+      <button class="ghost-button" id="logoutButton" type="button" hidden>Вийти</button>
+      <button class="ghost-button" id="exportButton" type="button">Завантажити резервну копію</button>
+      <button class="ghost-button" id="importButton" type="button">Відновити дані</button>
+      <button class="ghost-button" id="resetButton" type="button">Очистити дані</button>
+      <input id="importFile" type="file" accept="application/json" hidden />
+    </header>
+
+    <main>
+      <section class="office coach-view" id="coachOffice">
+        <div class="office-heading"><div><p class="eyebrow">Кабінет тренера</p><h1>Уся група. Один зрозумілий фокус.</h1></div><button class="primary-button" id="coachAddPlayer" type="button">Додати учасника <span>+</span></button></div>
+        <div class="profile-strip coach-profile-strip" id="coachProfileEditor" aria-label="Керування профілем гравця">
+          <div class="profile-label"><label class="photo-upload" for="playerPhoto" title="Завантажити фото гравця"><span class="player-avatar" id="playerAvatar">№</span><input id="playerPhoto" type="file" accept="image/*" /><span class="photo-edit">Змінити фото</span></label><div><span class="muted">Керування профілем</span><strong id="profileNameDisplay">Новий гравець</strong></div></div>
+          <label>Учасник<select id="playerSelect" aria-label="Оберіть учасника"></select></label>
+          <label>Ім’я<input id="playerName" type="text" placeholder="Наприклад, Максим" maxlength="40" /></label>
+          <label>Вік<input id="playerAge" type="number" inputmode="numeric" placeholder="11" min="5" max="23" /></label>
+          <label>Позиція<select id="playerPosition"><option value="">Оберіть позицію</option><option>Воротар</option><option>Захисник</option><option>Півзахисник</option><option>Нападник</option></select></label>
+          <button class="save-button" id="saveProfile" type="button">Зберегти профіль</button>
+          <button class="ghost-button" id="addPlayer" type="button">+ Учасник</button>
+          <button class="ghost-button coach-login-button" id="createPlayerLogin" type="button">Створити вхід гравця</button>
+        </div>
+        <div class="coach-metrics"><article><span>Учасників</span><strong id="coachPlayerCount">1</strong><small>у вашій групі</small></article><article><span>Оцінок цього тижня</span><strong id="coachAssessmentCount">0</strong><small>заповнених профілів</small></article><article><span>Найчастіший фокус</span><strong id="coachFocus">—</strong><small>за останніми оцінками</small></article></div>
+        <div class="coach-list-wrap"><div><p class="eyebrow">Учасники</p><h2>Прогрес гравців</h2></div><div class="coach-list" id="coachPlayerList"></div></div>
+        <div class="coach-note"><span>Порада</span><p>Після кожного тижня обговоріть з гравцем одну сильну дію, одну точку росту й одну конкретну ціль на наступне тренування.</p></div>
+      </section>
+
+      <section class="hero player-view" id="dashboard">
+        <div class="hero-copy">
+          <p class="eyebrow">Кабінет гравця</p>
+          <h1>Прогрес, який бачить гравець і тренер.</h1>
+          <p class="hero-text">Тут видно рівень, динаміку, сильні сторони та наступні кроки. Оцінювання залишається зрозумілим і конкретним.</p>
+          <div class="player-identity" aria-label="Мій профіль">
+            <span class="player-avatar player-identity-avatar" id="playerIdentityAvatar">№</span>
+            <div><span class="muted">Мій профіль</span><strong id="playerIdentityName">Новий гравець</strong><small id="playerIdentityMeta">Вік і позицію додасть тренер</small></div>
+          </div>
+          <div class="hero-actions">
+            <a class="primary-button" href="#assessment">Почати оцінювання <span>→</span></a>
+            <a class="text-link" href="#how-it-works">Як це працює</a>
+          </div>
+        </div>
+        <div class="hero-score-card" aria-label="Загальний прогрес">
+          <div class="score-card-header"><span>Загальний рівень</span><span class="pulse">активно</span></div>
+          <div class="score-number"><span id="overallScore">—</span><small>/100</small></div>
+          <div class="score-line"><span id="overallBar"></span></div>
+          <p id="overallMessage">Внесіть перше оцінювання, щоб побачити профіль.</p>
+          <div class="mini-stats"><div><b id="topSkill">—</b><span>сильна сторона</span></div><div><b id="focusCount">0</b><span>фокуси</span></div></div>
+        </div>
+      </section>
+
+      <section class="section dashboard-section player-view">
+        <div class="section-heading"><div><p class="eyebrow">Карта розвитку</p><h2>Баланс профілю</h2></div><p>Ціль на період: покращити кожен обраний напрям на 5–10 балів, а не гнатися за ідеальними оцінками.</p></div>
+        <div class="skill-grid" id="skillGrid"></div>
+        <div class="player-trend"><div><p class="eyebrow">Прогрес гравця</p><h3>Динаміка за тижнями</h3><p>Графік формується після кожного збереженого оцінювання.</p></div><div class="player-chart-wrap"><span id="playerChartHint">Ще немає даних</span><svg id="playerChart" viewBox="0 0 620 170" role="img" aria-label="Графік прогресу гравця"></svg></div></div>
+      </section>
+
+      <section class="section player-view" id="testing">
+        <div class="section-heading"><div><p class="eyebrow">Тестування гравця</p><h2>Контрольний зріз навички</h2></div><p>Це окремий журнал вимірювань: вводьте власну назву тесту, значення та одиницю виміру. Наприклад: 4,82 сек, 186 см, 8 із 10 або рівень 4.</p></div>
+        <div class="testing-panel"><form id="testingForm" class="test-form"><label>Напрям тестування<select id="testCategory"></select></label><label>Назва тесту<input id="testName" list="testSuggestions" type="text" placeholder="Оберіть шаблон або впишіть свій тест" required /><datalist id="testSuggestions"></datalist></label><label>Дата<input id="testDate" type="date" /></label><div class="test-value-row"><label>Результат<input id="testValue" type="text" placeholder="Наприклад, 4,82" required /></label><label>Одиниця виміру<input id="testUnit" list="unitSuggestions" type="text" placeholder="сек, см, бали…" required /><datalist id="unitSuggestions"><option value="сек"></option><option value="см"></option><option value="м"></option><option value="разів"></option><option value="бали"></option><option value="із 10"></option><option value="рівень"></option><option value="%"></option></datalist></label></div><label>Умови або коментар<textarea id="testNote" placeholder="Наприклад: покриття, дистанція, кількість спроб, права/ліва нога"></textarea></label><button class="primary-button" type="submit">Зберегти тест <span>→</span></button></form><div class="test-results"><div><p class="eyebrow">Останні тести</p><h3>Результати гравця</h3></div><div id="testHistory" class="test-history"></div></div></div>
+      </section>
+
+      <section class="section assessment player-view" id="assessment">
+        <div class="section-heading"><div><p class="eyebrow">Щотижневий check-in</p><h2>Оцінка за цей тиждень</h2></div><p>Поставте 0–100 за спостереженнями тренера та самого гравця. Кожен місяць має чотири окремі щотижневі оцінки.</p></div>
+        <div class="assessment-layout">
+          <form id="assessmentForm" class="assessment-form">
+            <div class="week-row"><label>Тиждень<select id="weekSelect"><option>Тиждень 1</option><option>Тиждень 2</option><option>Тиждень 3</option><option>Тиждень 4</option></select></label><label>Місяць<select id="monthSelect"><option>Січень</option><option>Лютий</option><option>Березень</option><option>Квітень</option><option>Травень</option><option>Червень</option><option>Липень</option><option>Серпень</option><option>Вересень</option><option>Жовтень</option><option>Листопад</option><option>Грудень</option></select></label></div>
+            <div id="scoreInputs" class="score-inputs"></div>
+            <div class="detail-title"><div><p class="eyebrow">Детальна оцінка</p><h3>Критерії за шкалою 0–100</h3></div><p>Середній бал кожної сфери автоматично оновить загальний профіль.</p></div>
+            <div id="criteriaInputs" class="criteria-inputs"></div>
+            <button class="primary-button form-button" type="submit">Зберегти оцінку <span>→</span></button>
+            <p class="form-note" id="formNote">Для кожного критерію введіть бал від 0 до 100. Шкала рівнів: 0–39 Початок · 40–59 Розвиток · 60–79 Впевнений · 80–89 PRO · 90–100 ELITE.</p>
+          </form>
+          <aside class="assessment-aside"><p class="eyebrow">Порада тренеру</p><h3>Оцінюйте дію, а не талант.</h3><p>«3 рази просканував поле перед прийомом» корисніше, ніж загальне «краще читає гру».</p><div class="quote-card">«Після оцінки оберіть максимум 3 фокуси. Решта — підтримка.»</div></aside>
+        </div>
+      </section>
+
+      <section class="section criteria-section player-view" id="criteria">
+        <div class="section-heading"><div><p class="eyebrow">Критерії оцінювання</p><h2>Що саме спостерігаємо</h2></div><p>Кожен критерій оцінюється за шкалою 0–100 у блоці оцінювання вище. Тут зручно переглянути структуру профілю.</p></div>
+        <div class="criteria-grid" id="criteriaGrid"></div>
+      </section>
+
+      <section class="section plan-section player-view" id="plan">
+        <div class="section-heading"><div><p class="eyebrow">План дій</p><h2>Фокус на наступні 4 тижні</h2></div><p>Сайт автоматично пропонує напрями з найнижчим балом. Оберіть до трьох — і сформуйте прості, вимірювані цілі.</p></div>
+        <div class="priority-panel"><div id="priorities" class="priority-list"></div><div class="goal-builder"><p class="eyebrow">SMART-ціль</p><h3>Одна чітка домовленість</h3><div class="smart-guide"><article><b>S</b><strong>Specific — конкретна</strong><span>Що саме зробить гравець?</span></article><article><b>M</b><strong>Measurable — вимірювана</strong><span>Як перевіримо результат?</span></article><article><b>A</b><strong>Achievable — досяжна</strong><span>Чи реально це зробити?</span></article><article><b>R</b><strong>Relevant — важлива</strong><span>Навіщо це гравцю?</span></article><article><b>T</b><strong>Time-bound — вчасна</strong><span>До якої дати?</span></article></div><label>S — Конкретна дія<textarea id="smartGoal" placeholder="Наприклад: перед кожним прийомом м’яча скануватиму поле 2 рази у 3 вправах за тренування."></textarea></label><div class="goal-meta smart-fields"><label>M — Як виміряємо?<input id="goalEvidence" type="text" placeholder="Відео + чек тренера" /></label><label>A — Чому це досяжно?<input id="goalAchievable" type="text" placeholder="3 тренування на тиждень" /></label><label>R — Чому це важливо?<input id="goalRelevant" type="text" placeholder="Швидше бачу вільного партнера" /></label><label>T — До дати<input id="goalDate" type="date" /></label></div><button class="save-button" id="saveGoal" type="button">Зберегти ціль</button><p id="savedGoal" class="saved-goal"></p></div></div>
+      </section>
+
+      <section class="section player-view" id="challenges">
+        <div class="section-heading"><div><p class="eyebrow">Домашні завдання та виклики</p><h2>100 кроків до сильнішої гри</h2></div><p>Обирайте один виклик на день або 2–3 на тиждень. Духовні завдання — добровільний християнський формат для сімей, які хочуть поєднати футбол, характер і віру.</p></div>
+        <div class="challenge-toolbar"><div class="challenge-progress"><span>Виконано</span><strong id="challengeDone">0 / 100</strong><div><span id="challengeProgressBar"></span></div></div><button class="primary-button" id="randomChallenge" type="button">Обрати випадковий виклик <span>↗</span></button></div>
+        <div class="challenge-filters" id="challengeFilters"><button class="active" data-filter="all" type="button">Усі 100</button><button data-filter="technical" type="button">Техніка</button><button data-filter="physical" type="button">Фізика</button><button data-filter="intellectual" type="button">Інтелект</button><button data-filter="tactical" type="button">Тактика</button><button data-filter="leadership" type="button">Лідерство</button><button data-filter="spiritual" type="button">Духовність</button></div>
+        <p class="challenge-picked" id="challengePicked"></p>
+        <div class="challenge-grid" id="challengeGrid"></div>
+      </section>
+
+      <section class="how-section player-view" id="how-it-works">
+        <p class="eyebrow">Ритм роботи</p><h2>10 хвилин щотижня. Видимий прогрес щомісяця.</h2>
+        <div class="steps"><article><span>01</span><h3>Спостерігаємо</h3><p>Тренер і гравець коротко фіксують якість дій після тижня.</p></article><article><span>02</span><h3>Обираємо</h3><p>Знаходимо 1–3 зони з найбільшим потенціалом росту.</p></article><article><span>03</span><h3>Практикуємо</h3><p>Перетворюємо їх на прості вправи та поведінку у грі.</p></article><article><span>04</span><h3>Перевіряємо</h3><p>Наприкінці місяця порівнюємо зміни та коригуємо план.</p></article></div>
+      </section>
+    </main>
+    <footer><span>SportKids</span><p>Індивідуальний розвиток футболіста · приватний доступ тренера і гравця</p></footer>
+    <div class="access-dialog" id="accessDialog" role="dialog" aria-modal="true" aria-labelledby="accessTitle">
+      <div class="access-panel"><button class="access-close" id="accessClose" type="button" aria-label="Закрити">×</button><p class="eyebrow">SportKids</p><h2 id="accessTitle">Вхід до SportKids</h2><div class="access-tabs"><button class="active" data-access="coach" type="button">Тренер</button><button data-access="player" type="button">Гравець</button></div><form id="coachLoginForm" class="access-form"><label>Email тренера<input id="coachEmail" type="email" autocomplete="email" required /></label><label>Пароль<input id="coachPassword" type="password" autocomplete="current-password" required /></label><button class="primary-button" type="submit">Увійти як тренер</button><p>Тренер використовує свій наявний email і пароль.</p></form><form id="playerLoginForm" class="access-form hidden"><label>Логін гравця<input id="playerLogin" type="text" autocomplete="username" required /></label><label>Пароль<input id="playerPassword" type="password" autocomplete="current-password" required /></label><button class="primary-button" type="submit">Увійти як гравець</button><p>Логін і пароль видає тренер. Email гравця не потрібен.</p></form><p class="access-message" id="accessMessage" aria-live="polite"></p></div>
+    </div>
+    <div class="access-dialog" id="playerCredentialsDialog" role="dialog" aria-modal="true" aria-labelledby="credentialsTitle">
+      <div class="access-panel"><button class="access-close" id="credentialsClose" type="button" aria-label="Закрити">×</button><p class="eyebrow">Доступ гравця</p><h2 id="credentialsTitle">Створити логін</h2><p>Передайте гравцеві ці дані особисто.</p><form id="playerCredentialsForm" class="access-form"><label>Логін<input id="newPlayerLogin" type="text" placeholder="maksym12" minlength="3" maxlength="30" required /></label><label>Пароль<input id="newPlayerPassword" type="password" minlength="8" required /></label><button class="primary-button" type="submit">Створити вхід</button></form><p class="access-message" id="credentialsMessage" aria-live="polite"></p></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="secure.js"></script>
+    <script src="challenges.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

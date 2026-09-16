@@ -1,0 +1,122 @@
+/* Trainer workspace: profile administration lives only inside the coach board. */
+.coach-profile-strip {
+  margin: 26px 0 32px;
+  flex-wrap: wrap;
+}
+
+/* Player account: identity is visible, but is intentionally read-only. */
+.player-identity {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 20px 0 0;
+}
+
+.player-identity-avatar {
+  width: 48px;
+  height: 48px;
+  font-size: 17px;
+}
+
+.player-identity strong,
+.player-identity small {
+  display: block;
+}
+
+.player-identity strong {
+  font-size: 15px;
+}
+
+.player-identity small {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+/* The priority list should use only the height it needs. The wider SMART card
+   gets the remaining space and is easier to read and complete. */
+.priority-panel {
+  grid-template-columns: minmax(320px, .72fr) minmax(0, 1.28fr);
+  align-items: start;
+}
+
+.priority-list {
+  align-content: start;
+  align-self: start;
+}
+
+.goal-builder {
+  padding: 32px;
+  border-radius: 18px;
+}
+
+.goal-builder h3 {
+  font-size: 30px;
+  line-height: 1.08;
+  margin-bottom: 22px;
+}
+
+.goal-builder label {
+  font-size: 12px;
+}
+
+.goal-builder input,
+.goal-builder textarea {
+  font-size: 14px;
+  padding: 11px 12px;
+}
+
+.goal-builder textarea {
+  min-height: 100px;
+}
+
+.goal-meta {
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.smart-guide {
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.smart-guide article {
+  min-height: 128px;
+  padding: 13px;
+}
+
+.smart-guide b {
+  font-size: 25px;
+}
+
+.smart-guide strong {
+  font-size: 12px;
+  line-height: 1.28;
+  margin-top: 7px;
+}
+
+.smart-guide span {
+  font-size: 10.5px;
+  line-height: 1.38;
+  margin-top: 7px;
+}
+
+@media (max-width: 900px) {
+  .priority-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .goal-builder {
+    padding: 22px;
+  }
+
+  .goal-builder h3 {
+    font-size: 26px;
+  }
+
+  .smart-guide article {
+    min-height: 112px;
+  }
+}
