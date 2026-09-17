@@ -135,7 +135,7 @@
 .coach-card-photo-control:hover { background: var(--green); }
 .player-only .coach-card-photo-control { display: none; }
 
-.player-card-info { position: relative; z-index: 2; min-height: 58px; margin-top: 33px; padding: 10px 132px 0 0; border-top: 1px solid rgba(7,29,25,.18); }
+.player-card-info { position: relative; z-index: 2; min-height: 0; margin-top: 106px; padding: 10px 0 0; border-top: 1px solid rgba(7,29,25,.18); }
 .player-card-info h2 { max-width: 100%; margin: 0; font: 700 21px/1 "Space Grotesk"; letter-spacing: -1px; overflow-wrap: anywhere; }
 .player-card-info p { margin: 6px 0 0; color: #39564c; font: 800 8px Manrope; letter-spacing: .7px; }
 
@@ -265,6 +265,56 @@
   .hero-visuals { grid-template-columns: 1fr; }
   .player-card { min-height: 330px; }
   .player-card-photo { width: 132px; height: 164px; }
+}
+
+/* Mobile-first card refinement. It also prevents Safari from creating a
+   horizontal scroll area when a long Ukrainian name or photo is present. */
+@media (max-width: 640px) {
+  html, body { overflow-x: hidden; }
+
+  .hero {
+    padding: 42px 18px 54px;
+    gap: 28px;
+  }
+
+  .hero-visuals {
+    width: 100%;
+    max-width: none;
+    gap: 12px;
+  }
+
+  .player-card,
+  .hero-visuals .hero-score-card { width: 100%; }
+
+  .player-card {
+    min-height: 322px;
+    padding: 17px 16px 15px;
+    border-radius: 20px 20px 48px 48px;
+  }
+
+  .player-card-rating { margin-top: 15px; }
+  .player-card-rating strong { font-size: 49px; }
+  .player-card-photo { top: 49px; right: 14px; width: 116px; height: 144px; }
+  .player-card-info { min-height: 0; margin-top: 105px; padding: 9px 0 0; }
+  .player-card-info h2 { font-size: 19px; line-height: .98; letter-spacing: -.8px; }
+  .player-card-info p { font-size: 7px; line-height: 1.3; }
+  .player-card-stats { gap: 8px 3px; margin-top: 14px; }
+  .player-card-stats b { font-size: 16px; }
+  .player-card-stats span { font-size: 7px; }
+  .coach-card-photo-control { font-size: 7px; }
+
+  .hero-score-card { padding: 24px; border-radius: 17px; }
+  .score-number { font-size: 62px; }
+  .mini-stats { gap: 14px; }
+}
+
+@media (max-width: 390px) {
+  .hero { padding-left: 14px; padding-right: 14px; }
+  .player-card { min-height: 306px; }
+  .player-card-photo { width: 104px; height: 130px; }
+  .player-card-info { margin-top: 94px; padding-right: 0; }
+  .player-card-info h2 { font-size: 17px; }
+  .player-card-stats b { font-size: 14px; }
 }
 
 /* Public parent introduction. The workspaces stay hidden until their owner
