@@ -32,6 +32,14 @@
   gap: 14px;
 }
 
+/* The two visual cards need a real minimum width. Above the tablet breakpoint
+   the hero reserves space for them; below it they become a clean one-column
+   stack instead of overflowing across the copy. */
+.hero {
+  grid-template-columns: minmax(0, .95fr) minmax(520px, 1.05fr);
+  gap: 40px;
+}
+
 .hero-visuals .hero-score-card { min-width: 0; }
 
 .player-card {
@@ -104,9 +112,30 @@
   box-shadow: 0 12px 22px rgba(7,29,25,.2);
 }
 
-.player-card-photo img { width: 100%; height: 100%; object-fit: cover; }
+.player-card-photo > #playerCardPhoto { display: grid; place-items: center; width: 100%; height: 100%; }
+.player-card-photo #playerCardPhoto img { width: 100%; height: 100%; object-fit: cover; }
 
-.player-card-info { position: relative; z-index: 2; margin-top: 33px; padding-top: 10px; border-top: 1px solid rgba(7,29,25,.18); }
+.coach-card-photo-control {
+  position: absolute;
+  inset: auto 6px 6px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: 6px 5px;
+  border-radius: 6px;
+  background: rgba(7,29,25,.76);
+  color: #fff;
+  cursor: pointer;
+  font: 800 8px Manrope;
+  letter-spacing: .35px;
+  text-align: center;
+}
+
+.coach-card-photo-control input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.coach-card-photo-control:hover { background: var(--green); }
+.player-only .coach-card-photo-control { display: none; }
+
+.player-card-info { position: relative; z-index: 2; min-height: 58px; margin-top: 33px; padding: 10px 132px 0 0; border-top: 1px solid rgba(7,29,25,.18); }
 .player-card-info h2 { max-width: 100%; margin: 0; font: 700 21px/1 "Space Grotesk"; letter-spacing: -1px; overflow-wrap: anywhere; }
 .player-card-info p { margin: 6px 0 0; color: #39564c; font: 800 8px Manrope; letter-spacing: .7px; }
 
@@ -207,6 +236,17 @@
   }
 
   .hero-visuals { max-width: 680px; }
+}
+
+@media (max-width: 1120px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .hero-visuals {
+    max-width: 720px;
+  }
 }
 
 @media (max-width: 700px) {
