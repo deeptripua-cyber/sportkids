@@ -511,6 +511,20 @@
   .test-item .test-delete { grid-column: 1 / -1; justify-self: start; }
 }
 
+/* Player account: results are the primary screen; the coach-only form must not leave an empty column. */
+.player-only #testing .testing-panel { grid-template-columns: minmax(0, 1fr); }
+.player-only #testing .test-results { width: min(100%, 980px); }
+.player-only #testing .test-trend { display: grid; grid-template-columns: minmax(210px, 300px) minmax(0, 1fr); column-gap: 22px; align-items: start; }
+.player-only #testing .test-trend label { grid-column: 1; }
+.player-only #testing .test-trend-hint { grid-column: 1; }
+.player-only #testing #testTrendChart { grid-column: 2; grid-row: 1 / span 2; margin: 0; }
+.player-only #testing .test-history { max-height: 560px; }
+
+@media (max-width: 700px) {
+  .player-only #testing .test-trend { display: block; }
+  .player-only #testing #testTrendChart { margin-top: 12px; }
+}
+
 .skill-progress { margin-top: 16px; padding: 24px; border: 1px solid #e4e7df; border-radius: 15px; background: var(--paper); }
 .skill-progress-head { display: flex; justify-content: space-between; gap: 28px; align-items: end; }
 .skill-progress h3 { margin: 0; font: 700 22px "Space Grotesk"; letter-spacing: -.8px; }
