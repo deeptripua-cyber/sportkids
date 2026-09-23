@@ -171,7 +171,7 @@
     if (!isCurrentSession(epoch, coachId)) return false;
     if (error) {
       mode = null;
-      window.SportKidsApp.setPlayerView();
+      window.SportKidsApp.setPublicView();
       status(`Помилка завантаження: ${error.message}`);
       return false;
     }
@@ -199,7 +199,7 @@
     if (!isCurrentSession(epoch, playerId)) return false;
     if (error || !data) {
       mode = null;
-      window.SportKidsApp.setPlayerView();
+      window.SportKidsApp.setPublicView();
       status(error ? `Помилка доступу: ${error.message}` : 'Для цього логіна ще не призначено профіль гравця.');
       return false;
     }
@@ -219,8 +219,9 @@
   async function activateSession(nextSession) {
     setSession(nextSession);
     if (!session) {
-      window.SportKidsApp.setPlayerView();
-      status('Демо-режим: увійдіть як тренер, щоб зберігати дані у базі');
+      mode = null;
+      window.SportKidsApp.setPublicView();
+      status('Публічна сторінка SportKids');
       updateAuthButtons(false);
       return false;
     }
@@ -379,7 +380,11 @@
 
   window.SportKidsSecure = {
     start: async () => {
-      byId('loginButton')?.addEventListener('click', () => dialog('accessDialog', true));
+      const openAccess = next => { chooseAccess(next); dialog('accessDialog', true); };
+      byId('loginButton')?.addEventListener('click', () => openAccess('player'));
+      byId('playerPortalButton')?.addEventListener('click', () => openAccess('player'));
+      byId('welcomePlayerLogin')?.addEventListener('click', () => openAccess('player'));
+      byId('coachPortalButton')?.addEventListener('click', () => openAccess('coach'));
       byId('logoutButton')?.addEventListener('click', () => authDb.auth.signOut());
       byId('accessClose')?.addEventListener('click', () => dialog('accessDialog', false));
       byId('credentialsClose')?.addEventListener('click', () => dialog('playerCredentialsDialog', false));

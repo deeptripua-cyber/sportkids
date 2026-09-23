@@ -1,6 +1,25 @@
+/* The public page never exposes either workspace. */
+.public-view { display: none; }
+.role-public .public-view { display: block; }
+.role-public .coach-view,
+.role-public .player-view { display: none; }
+
 /* The signed-in trainer sees the coach workspace; a player sees only own progress. */
 .role-coach .coach-view { display: block; }
 .role-coach .player-view { display: none; }
+.role-coach .public-view { display: none; }
 .role-player .coach-view { display: none; }
+.role-player .public-view { display: none; }
+
+.role-public .local-status,
+.role-public #logoutButton,
+.role-public #exportButton,
+.role-public #importButton,
+.role-public #resetButton,
+.role-player .public-nav,
+.role-coach .public-nav { display: none; }
+
+.role-player .topbar,
+.role-coach .topbar { justify-content: space-between; }
 
 .local-status.is-error { color: #b33a32; }
