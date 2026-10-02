@@ -163,6 +163,35 @@
     return task;
   }
 
+  async function deletePlayer(player) {
+    // Do not let a pending autosave recreate a profile immediately after it
+    // has been removed. Finish any request already underway first.
+    clearTimeout(syncTimer);
+    syncTimer = null;
+    await syncChain.catch(() => false);
+    if (!session || mode !== 'coach' || !player?.cloudId) {
+      return { ok: false, message: 'Профіль не готовий до видалення. Оновіть сторінку та спробуйте ще раз.' };
+    }
+    const epoch = sessionEpoch;
+    const coachId = session.user.id;
+    const db = dataDb;
+    try {
+      const { data, error } = await db.from('player_accounts')
+        .delete()
+        .eq('id', player.cloudId)
+        .eq('coach_id', coachId)
+        .select('id');
+      if (!isCurrentCoach(epoch, coachId)) return { ok: false, message: 'Сесія змінилася. Увійдіть як тренер знову.' };
+      if (error) throw error;
+      if (!data?.length) return { ok: false, message: 'Профіль не знайдено або немає прав на його видалення.' };
+      status('Профіль гравця видалено');
+      return { ok: true };
+    } catch (error) {
+      if (isCurrentSession(epoch, coachId)) status(`Помилка видалення: ${error.message}`);
+      return { ok: false, message: error.message || 'Не вдалося видалити профіль.' };
+    }
+  }
+
   async function loadCoach(epoch) {
     const coachId = session?.user?.id;
     const db = dataDb;
@@ -417,6 +446,10 @@
       });
     },
     queueSync,
+    deletePlayer,
+    cacheCurrentPlayers: () => {
+      if (session && mode === 'coach') cacheCoachPlayers(session.user.id);
+    },
     isCoach: () => Boolean(session) && mode === 'coach',
     requestCoachView: () => {
       if (session && mode === 'coach') {
