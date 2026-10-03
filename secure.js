@@ -102,6 +102,7 @@
       position: row.position || state.position || '',
       history: state.history || {},
       tests: state.tests || [],
+      matches: state.matches || [],
       challenges: state.challenges || {},
       period: state.period || { month: 'Січень', week: 'Тиждень 1' },
       goal: state.goal || null
