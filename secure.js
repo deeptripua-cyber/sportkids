@@ -121,6 +121,17 @@
           app_state: stateForCloud(player)
         };
         if (player.cloudId) {
+          // Challenges are saved by a separate, atomic action. Preserve the
+          // newest completion state when a coach saves another profile field.
+          const { data: current, error: currentError } = await db.from('player_accounts')
+            .select('app_state')
+            .eq('id', player.cloudId)
+            .eq('coach_id', coachId)
+            .maybeSingle();
+          if (currentError) throw currentError;
+          if (current?.app_state?.challenges) {
+            payload.app_state.challenges = current.app_state.challenges;
+          }
           const { data, error } = await db.from('player_accounts')
             .update(payload)
             .eq('id', player.cloudId)
@@ -189,6 +200,28 @@
     } catch (error) {
       if (isCurrentSession(epoch, coachId)) status(`Помилка видалення: ${error.message}`);
       return { ok: false, message: error.message || 'Не вдалося видалити профіль.' };
+    }
+  }
+
+  async function saveChallenge(player, challengeId, completed) {
+    if (!session || !['coach', 'player'].includes(mode) || !player?.cloudId) {
+      return { ok: false, message: 'Увійдіть у свій кабінет і повторіть дію.' };
+    }
+    const epoch = sessionEpoch;
+    const userId = session.user.id;
+    try {
+      const { data, error } = await dataDb.rpc('set_challenge_completion', {
+        p_player_account_id: player.cloudId,
+        p_challenge_id: challengeId,
+        p_completed: Boolean(completed)
+      });
+      if (!isCurrentSession(epoch, userId)) return { ok: false, message: 'Сесія змінилася. Увійдіть знову.' };
+      if (error) throw error;
+      status('Виконання завдання збережено');
+      return { ok: true, challenges: data && typeof data === 'object' ? data : null };
+    } catch (error) {
+      if (isCurrentSession(epoch, userId)) status(`Помилка збереження завдання: ${error.message}`);
+      return { ok: false, message: error.message || 'Не вдалося зберегти завдання.' };
     }
   }
 
@@ -447,6 +480,7 @@
     },
     queueSync,
     deletePlayer,
+    saveChallenge,
     cacheCurrentPlayers: () => {
       if (session && mode === 'coach') cacheCoachPlayers(session.user.id);
     },
