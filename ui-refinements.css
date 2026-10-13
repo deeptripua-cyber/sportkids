@@ -588,3 +588,10 @@
 .match-stat-line { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }.match-stat-line span { padding: 5px 7px; border-radius: 999px; background: #edf0e9; color: #52605a; font-size: 10px; }.match-stat-line b { color: var(--ink); }
 @media (max-width: 900px) { .match-layout { grid-template-columns: 1fr; }.match-metric-inputs { max-height: none; } }
 @media (max-width: 540px) { .match-form, .match-results { padding: 16px; }.match-meta, .match-compare, .match-comparison { grid-template-columns: 1fr; } }
+
+/* A native picker keeps the complete test catalogue usable on iPad Safari. */
+.test-form label, .test-form select, .test-form input { min-width: 0; }
+#testPresetSelect { width: 100%; box-sizing: border-box; min-height: 44px; }
+@media (pointer: coarse) {
+  .test-form select, .test-form input, .test-form textarea, .test-trend select { font-size: 16px; }
+}
