@@ -90,6 +90,33 @@
     return state;
   }
 
+  const objectValue = value => value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+  const recordKey = (record, index) => record?.id || `${record?.item || record?.opponent || record?.date || 'record'}-${index}`;
+  const mergeRecords = (remoteRecords, localRecords) => {
+    const merged = new Map();
+    (Array.isArray(remoteRecords) ? remoteRecords : []).forEach((record, index) => merged.set(recordKey(record, index), record));
+    (Array.isArray(localRecords) ? localRecords : []).forEach((record, index) => merged.set(recordKey(record, index), record));
+    return [...merged.values()];
+  };
+
+  // A saved browser can be older than the cloud version (for example after a
+  // coach works from a second phone or iPad).  Never replace collections of
+  // results with an empty copy from that older browser.
+  function mergeCloudState(remoteState, localState) {
+    const remote = objectValue(remoteState);
+    const local = objectValue(localState);
+    const merged = { ...remote, ...local };
+    merged.history = { ...objectValue(remote.history), ...objectValue(local.history) };
+    merged.tests = mergeRecords(remote.tests, local.tests);
+    merged.matches = mergeRecords(remote.matches, local.matches);
+    // Challenge completion is saved atomically, so the just-read cloud state
+    // is always the source of truth for it.
+    merged.challenges = { ...objectValue(local.challenges), ...objectValue(remote.challenges) };
+    const localRating = Number(local.rating?.total ?? local.rating?.value ?? local.overallRating ?? local.ovr);
+    if (!Number.isFinite(localRating) && remote.rating) merged.rating = remote.rating;
+    return merged;
+  }
+
   function hydrate(row) {
     const state = row.app_state && typeof row.app_state === 'object' ? row.app_state : {};
     return {
@@ -122,17 +149,13 @@
           app_state: stateForCloud(player)
         };
         if (player.cloudId) {
-          // Challenges are saved by a separate, atomic action. Preserve the
-          // newest completion state when a coach saves another profile field.
           const { data: current, error: currentError } = await db.from('player_accounts')
             .select('app_state')
             .eq('id', player.cloudId)
             .eq('coach_id', coachId)
             .maybeSingle();
           if (currentError) throw currentError;
-          if (current?.app_state?.challenges) {
-            payload.app_state.challenges = current.app_state.challenges;
-          }
+          payload.app_state = mergeCloudState(current?.app_state, payload.app_state);
           const { data, error } = await db.from('player_accounts')
             .update(payload)
             .eq('id', player.cloudId)

@@ -595,3 +595,5 @@
 @media (pointer: coarse) {
   .test-form select, .test-form input, .test-form textarea, .test-trend select { font-size: 16px; }
 }
+/* Manual recovery keeps a known overall rating without changing test data. */
+.rating-recovery{display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,180px) auto;gap:14px;align-items:end;margin:18px 0;padding:16px;border:1px solid #dfe7dc;border-radius:16px;background:#f7faf5}.rating-recovery>div{display:grid;gap:4px}.rating-recovery .eyebrow{margin:0}.rating-recovery small{color:#64706b;line-height:1.35}.rating-recovery label{display:grid;gap:7px;font-weight:700;font-size:.85rem}.rating-recovery input{width:100%;min-height:44px;border:1px solid #bfcbbf;border-radius:10px;padding:0 12px;background:#fff;font:inherit}.rating-recovery .secondary-button{min-height:44px;white-space:nowrap}@media(max-width:700px){.rating-recovery{grid-template-columns:1fr}.rating-recovery .secondary-button{width:100%}}
